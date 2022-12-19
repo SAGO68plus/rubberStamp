@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <title>橡皮章辅助小工具</title>
+    <link href="/style.css" rel="stylesheet" />
+    <script src="/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <div class="mainFrame">
+      <div class="toolPanel">
+        ToolPanel
+        <div class="colorPicker">
+          ColorPicker
+          <xy-color-pane defaultvalue="rgb(66, 185, 131)"></xy-color-pane>
+        </div>
+        <div class="layerManager">
+          LayerManager
+          <div class="layerBuffer">
+            <xy-checkbox>layer1</xy-checkbox>
+            <xy-checkbox>layer2</xy-checkbox>
+            <xy-checkbox>layer3</xy-checkbox>
+          </div>
+        </div>
+      </div>
+      <div class="imageDisplay">
+        <div class="originImage">
+          OriginImage
+          <img id="photoIn" src="./image/Lenna.png" />
+          <div class="bottomCol">
+            <input type="file" id="photo" name="photo" />
+            <xy-button
+              id="btn_process"
+              type="primary"
+              onclick="ProcessImg(this);"
+              >START PROCESS!</xy-button
+            >
+          </div>
+        </div>
+        <div class="processedImage">
+          ProcessedImage
+          <img id="photoOut" src="./image/Lenna2.png" />
+          <div class="bottomCol">
+            <xy-button type="primary" href="/image/Lenna2.png" download="Lenna2"
+              >DOWNLOAD</xy-button
+            >
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      $(function () {
+        $("#photo").on("change", function () {
+          var r = new FileReader();
+          f = document.getElementById("photo").files[0];
+          r.readAsDataURL(f);
+          r.onload = function (e) {
+            document.getElementById("photoIn").src = this.result;
+          };
+        });
+      });
+    </script>
+
+    <script type="module">
+      import "/xy-ui/index.js";
+      function ProcessImg(obj) {
+        let str_img_data = document.getElementById("photoIn").src;
+        let dst_img_data = document.getElementById("photoOut").src;
+        let file = document.getElementById("photo").files[0];
+
+        if (file == "") {
+          alert("No image detected, please upload!");
+          return;
+        }
+
+        //把请求打包,转换图片为base64字符串
+        let http_request;
+        if (window.XMLHttpRequest) {
+          http_request = new XMLHttpRequest();
+        } else {
+          http_request = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+
+        let idx_postfix = str_img_data.indexOf("base64,");
+        if (idx_postfix > 0) {
+          str_img_data = str_img_data.substring(
+            idx_postfix + 7,
+            str_img_data.length
+          );
+        }
+
+        //发送数据
+        let data = { image_data: str_img_data };
+
+        http_request.open("POST", "/compute", false); //需要在flask里面调用POST
+        http_request.setRequestHeader("Content-type", "application/json");
+        http_request.send(JSON.stringify(data));
+
+        //解析从服务器返回的数据并渲染出来
+        let obj_json = eval("(" + http_request.responseText + ")");
+        let str_img = obj_json["img64"]; //flask需要import base64才能解析该字符串
+
+        let str_64_type = "data:image/png;base64,";
+        doument.getElementById("photoOut").src = str_64_type + str_img;
+      }
+    </script>
+  </body>
+</html>
