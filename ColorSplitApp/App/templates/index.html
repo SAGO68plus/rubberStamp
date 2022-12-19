@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="Tool for spliting colors" />
+        <meta name="author" content="Minko" />
+        <title>ImageColorSplit</title>
+        <link rel="icon" type="image/x-icon" href="{{url_for('static', filename='assets/favicon.ico')}}" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{{url_for('static', filename='css/styles.css')}}" rel="stylesheet" />
+        <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+        <!--<script src="{{url_for('static', filename='js/jquery.min.js')}}"></script>-->
+    </head>
+    
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-highlight fixed-top" id="mainNav">
+            <div class="container px-4">
+                <a class="navbar-brand" href="#page-top">Image-ColorSplit</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="">使用指南</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#upload">上传图片</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#result">分色结果</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Header-->
+        <header class="bg-primary bg-gradient text-white">
+            <div class="container px-4 text-center">
+                <h1 class="fw-bolder">Welcome to Image-ColorSplit</h1>
+                <p class="lead">一个为橡皮章爱好者设计的小工具</p>
+                <a class="btn btn-lg btn-light" href="#upload">Start spliting!</a>
+            </div>
+        </header>
+
+        <!--上传图片 预览图片-->
+        <section class="bg-light" id="upload">
+            <div class="container px-4">
+                <div class="row gx-4 justify-content-center">
+                    <div class="col-lg-8">
+                            <h2>上传图片</h2>
+                            <div class="container text-center imgContainer1">
+                                <div class="imgContainer2">
+                                    <input class="btn" id="uploadButton" name="upload_file" type="file">
+                                    <div id="uploadText">
+                                        <i><img src="../static/assets/drag&drop.svg" alt="" style="width: 50px;"></i>
+                                        <i style="font-size: 0.8rem; color: grey;">*点击或拖拽图片上传</i>
+                                        <i style="font-size: 0.8rem; color: grey;">*支持 .jpg .jpeg .png</i>
+                                        <i style="font-size: 0.8rem; color: grey;">*本工具一次可处理一张图片</i>
+                                    </div>
+                                    <div class="imgContainer3" id="rawImagePreview" style="background-image: url();"></div>
+                                </div>
+                            </div>
+
+                            <div class="text-center" id="row">
+                                <p class="remark">推荐尝试：</p>
+                                <div id="recommendations">
+                                    <i class="imageSample" id="sample1" style="background-image: url(../static/assets/leaf1.jpeg);"></i>
+                                    <i class="imageSample" id="sample2" style="background-image: url(../static/assets/painting2.jpeg);"></i>
+                                    <i class="imageSample" id="sample3" style="background-image: url(../static/assets/sea2.jpeg);"></i>
+                                    <i class="imageSample" id="sample4" style="background-image: url(../static/assets/sea3.jpeg);"></i>
+                                </div>
+                            </div>
+
+                            <div class="text-center" id="n_clusters">
+                                <p class="remark" id="splitNum">分色数量</p>
+                                <div class="btn-numbox">
+                                    <span role="button" id="input-number__decrease">-</span>
+                                    <span role="button" id="input-number__increase">+</span>
+                                    <!--合法性在js中处理-->
+                                    <input type="text" autocomplete="off" max="10" min="2" id="input-num" value="3">
+                                </div>
+                            </div>
+                            <div class="text-center" id="splitButton">
+                                <button id="confirm" class="btn btn-lg btn-regular" style="font-size: 1rem;" type="submit" onclick="confirm()">点击这里，开始分色👌</button>
+                            </div>
+                            <!--分色状态提示文字-->
+                            <p id="prompt""></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!--结果展示-->
+        <section id="result" style="display: None;">
+            <div class="container px-4">
+                <div class="row gx-4 justify-content-center">
+                    <div class="col-lg-8" id="resultShow">
+                        <h2>分色结果</h2>
+                        <!--色板-->
+                        <div class="container" id="paletteArea">
+                            <p class="lead">色板</p>
+                            <div class="container text-center imgContainer1">
+                                <div class="imgContainer2">
+                                    <div class="imgContainer3" id="imgPalette" style="background-image: url();"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--预览-->
+                        <div class="container" id="overviewArea">
+                            <p class="lead">图像预览</p>
+                            <div class="container text-center imgContainer1">
+                                <div class="imgContainer2">
+                                    <div class="imgContainer3" id="imgOverview" style="background-image: url();"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--分图层展示-->
+                        <div class="container" id="layersArea">
+                            <p class="lead">各图层预览</p>
+                            <div class="container text-center" id="layers">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Footer-->
+        <footer class="py-5 bg-dark">
+            <div class="container px-4"><p class="m-0 text-center text-white">Copyright &copy; Media Computing 2022</p></div>
+        </footer>
+        
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script type="text/javascript" src="../static/js/scripts.js"></script>
+        
+    </body>
+    <script type="text/javascript">
+        function confirm() {
+            var formData=new FormData();
+            var f=document.getElementById('uploadButton').files[0];
+            var n1= document.getElementById('input-num').value;
+            var n = Number(n1);
+            console.info(n);
+            console.info(typeof n);
+            formData.append('img',f);
+            formData.append('input',n);
+            document.getElementById('prompt').innerHTML='<p id="prompt" style="color: grey">分色中...</p>';
+            $.ajax({
+                url:"{{ url_for('upload') }}",
+                data:formData,
+                cache:false,
+                processData:false,
+                contentType:false,
+                type:'POST',
+                success:function (data) {
+                    if(data.signal==1){
+                        console.info(data.n);
+                        document.getElementById('prompt').innerHTML='<p id="prompt" style="color: darkgreen">分色成功！</p>';
+                        document.getElementById('result').style.display="block";
+                        //这里要再写一下刷新后回到页面顶端
+                        window.location.hash="#result";
+                        document.getElementById('imgPalette').style.backgroundImage="url("+data.palette+")";
+                        document.getElementById('imgOverview').style.backgroundImage="url("+data.overview+")";
+                        var layers = data.layers;
+                        for (var i in layers){
+                            //var p = document.createElement('div');
+                            //p.innerHTML = '<div class="container text-center imgContainer1"><div class="imgContainer2"><div class="imgContainer3" class="layersOverview" style="background-image: url('+layers[i]+');"></div></div></div>';
+                            //document.getElementById("layersArea").append(p);
+                            var g = document.createElement('img');
+                            g.src = layers[i];
+                            g.style.width = '100%';
+                            document.getElementById("layers").append(g);
+                        }
+                    }
+                }
+            })
+        }
+    </script>
+</html>
