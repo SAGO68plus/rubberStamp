@@ -101,6 +101,14 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!--色板rgb-->
+                        <div class="container">
+                            <p class="lead">色板RGB</p>
+                            <div class="container text-center" id="paletteRGB">
+                            </div>
+                        </div>
+
                         <!--预览-->
                         <div class="container" id="overviewArea">
                             <p class="lead">图像预览</p>
@@ -154,7 +162,6 @@
                 type:'POST',
                 success:function (data) {
                     if(data.signal==1){
-                        console.info(data.n);
                         document.getElementById('prompt').innerHTML='<p id="prompt" style="color: darkgreen">分色成功！</p>';
                         document.getElementById('result').style.display="block";
                         //这里要再写一下刷新后回到页面顶端
@@ -167,9 +174,27 @@
                             //p.innerHTML = '<div class="container text-center imgContainer1"><div class="imgContainer2"><div class="imgContainer3" class="layersOverview" style="background-image: url('+layers[i]+');"></div></div></div>';
                             //document.getElementById("layersArea").append(p);
                             var g = document.createElement('img');
+                            //id = rgb
                             g.src = layers[i];
                             g.style.width = '100%';
                             document.getElementById("layers").append(g);
+                        }
+                        var RGB = data.RGB;
+                        for (var i in RGB){
+                            //var p = document.createElement('div');
+                            //p.innerHTML = '<div class="container text-center imgContainer1"><div class="imgContainer2"><div class="imgContainer3" class="layersOverview" style="background-image: url('+layers[i]+');"></div></div></div>';
+                            //document.getElementById("layersArea").append(p);
+                            var container = document.createElement('div');
+                            container.className = 'RGBandNote';
+                            var RGBContainer = document.createElement('div');
+                            RGBContainer.className = 'RGB';
+                            RGBContainer.style.backgroundColor = RGB[i];
+                            var note = document.createElement('p');
+                            note.innerHTML=RGB[i];
+                            note.className = 'note';
+                            container.append(RGBContainer);
+                            container.append(note);
+                            document.getElementById("paletteRGB").append(container);
                         }
                     }
                 }

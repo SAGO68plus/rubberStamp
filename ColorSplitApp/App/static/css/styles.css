@@ -799,6 +799,29 @@ progress {
   height: 20em;
 }
 
+
+
+#paletteRGB{
+  width: 100%; 
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  flex-direction: column;
+}
+
+.RGBandNote{
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.RGB{
+  width: 3em;
+  height: 3em;
+  border: 1px solid #999;
+  border-radius: 0.5rem;
+}
+
 #layers{
   border: 1px solid #999;
   border-radius: 1rem;
@@ -940,6 +963,13 @@ progress {
   font-weight: 500;
   color: #333;
   margin-bottom: 0;
+}
+
+.note{
+  color: var(--bs-gray-900);
+  padding-left: 1rem;
+  font-weight: 300;
+  margin:1rem 0;
 }
 
 #splitNum{

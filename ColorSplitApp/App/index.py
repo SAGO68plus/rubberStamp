@@ -27,7 +27,8 @@ def upload():
     palette = image.showPalette()
     overview = image.showOverview()
     layers = image.showLayers()
-    return  jsonify({'signal':1, 'palette':palette, 'overview':overview, 'layers':layers})
+    RGB = image.paletteRGB()
+    return  jsonify({'signal':1, 'palette':palette,'RGB':RGB, 'overview':overview, 'layers':layers})
     
 if __name__ == '__main__':
-    app.run(port = 5500, host = '0.0.0.0', threaded = True, debug = True)
+    app.run(port = 8000, host = '0.0.0.0', threaded = True, debug = True)
