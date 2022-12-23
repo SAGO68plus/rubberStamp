@@ -80,7 +80,7 @@ prompt-toolkit==3.0.20
 psutil==5.9.0
 ptyprocess==0.7.0
 pure-eval==0.2.2
-pycosat==0.6.4
+pycosat==0.6.3
 pycparser==2.21
 Pygments==2.11.2
 pyOpenSSL==22.0.0

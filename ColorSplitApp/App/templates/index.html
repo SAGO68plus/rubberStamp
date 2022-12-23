@@ -14,128 +14,140 @@
     </head>
     
     <body id="page-top">
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-highlight fixed-top" id="mainNav">
-            <div class="container px-4">
-                <a class="navbar-brand" href="#page-top">Image-ColorSplit</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarResponsive">
-                    <ul class="navbar-nav ms-auto">
-                        <li class="nav-item"><a class="nav-link" href="">使用指南</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#upload">上传图片</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#result">分色结果</a></li>
-                    </ul>
-                </div>
+        <div class="vw-100 vh-100 bg-dark">
+            <!-- Header-->
+        <nav class="navbar navbar-light bg-primary">
+            <div class="container-fluid px-4">
+            <a class="text-white navbar-brand d-flex flex-row gap-4 align-items-center">
+            <div class="fs-3">Image-ColorSplit: </div>
+            <div class="fs-4">一款为橡皮章爱好者制作的小工具</div>
+            </a>
+            <form class="d-flex">
+                <a href="https://github.com/SAGO68plus/rubberStamp">
+                    <button type="button" class="btn btn-light">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" fill="white" /></svg>
+                        <div>
+                            GitHub
+                        </div>
+                    </button>
+                </a>
+
+            </form>
             </div>
         </nav>
-
-        <!-- Header-->
-        <header class="bg-primary bg-gradient text-white">
-            <div class="container px-4 text-center">
-                <h1 class="fw-bolder">Welcome to Image-ColorSplit</h1>
-                <p class="lead">一个为橡皮章爱好者设计的小工具</p>
-                <a class="btn btn-lg btn-light" href="#upload">Start spliting!</a>
-            </div>
-        </header>
-
-        <!--上传图片 预览图片-->
-        <section class="bg-light" id="upload">
-            <div class="container px-4">
-                <div class="row gx-4 justify-content-center">
-                    <div class="col-lg-8">
-                            <h2>上传图片</h2>
-                            <div class="container text-center imgContainer1">
-                                <div class="imgContainer2">
-                                    <input class="btn" id="uploadButton" name="upload_file" type="file">
-                                    <div id="uploadText">
-                                        <i><img src="../static/assets/drag&drop.svg" alt="" style="width: 50px;"></i>
-                                        <i style="font-size: 0.8rem; color: grey;">*点击或拖拽图片上传</i>
-                                        <i style="font-size: 0.8rem; color: grey;">*支持 .jpg .jpeg .png</i>
-                                        <i style="font-size: 0.8rem; color: grey;">*本工具一次可处理一张图片</i>
+        
+        <div class="d-flex flex-row gap-2 px-4 py-3">
+            <div id="upload">
+                <div class="d-flex flex-row rounded px-4 bg-light shadow">
+                        <div class="container d-flex flex-column ">
+                            <div class="py-4 px-1 fs-3">1. 上传图片</div>
+                                <div class="container text-center imgContainer1">
+                                    <div class="imgContainer2">
+                                        <input class="btn" id="uploadButton" name="upload_file" type="file">
+                                        <div id="uploadText">
+                                            <i><img src="../static/assets/drag&drop.svg" alt="" style="width: 50px;"></i>
+                                            <i style="font-size: 0.8rem; color: grey;">*点击或拖拽图片上传</i>
+                                            <i style="font-size: 0.8rem; color: grey;">*支持 .jpg .jpeg .png</i>
+                                            <i style="font-size: 0.8rem; color: grey;">*本工具一次可处理一张图片</i>
+                                        </div>
+                                        <div class="imgContainer3" id="rawImagePreview" style="background-image: url();"></div>
                                     </div>
-                                    <div class="imgContainer3" id="rawImagePreview" style="background-image: url();"></div>
                                 </div>
-                            </div>
-
-                            <div class="text-center" id="row">
-                                <p class="remark">推荐尝试：</p>
-                                <div id="recommendations">
-                                    <i class="imageSample" id="sample1" style="background-image: url(../static/assets/leaf1.jpeg);"></i>
-                                    <i class="imageSample" id="sample2" style="background-image: url(../static/assets/painting2.jpeg);"></i>
-                                    <i class="imageSample" id="sample3" style="background-image: url(../static/assets/sea2.jpeg);"></i>
-                                    <i class="imageSample" id="sample4" style="background-image: url(../static/assets/sea3.jpeg);"></i>
+    
+                                <div class="text-center" id="row">
+                                    <p class="remark">推荐尝试：</p>
+                                    <div id="recommendations">
+                                        <i class="imageSample" id="sample1" style="background-image: url(../static/assets/leaf1.jpeg);"></i>
+                                        <i class="imageSample" id="sample2" style="background-image: url(../static/assets/painting2.jpeg);"></i>
+                                        <i class="imageSample" id="sample3" style="background-image: url(../static/assets/sea2.jpeg);"></i>
+                                        <i class="imageSample" id="sample4" style="background-image: url(../static/assets/sea3.jpeg);"></i>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="text-center" id="n_clusters">
-                                <p class="remark" id="splitNum">分色数量</p>
-                                <div class="btn-numbox">
-                                    <span role="button" id="input-number__decrease">-</span>
-                                    <span role="button" id="input-number__increase">+</span>
-                                    <!--合法性在js中处理-->
-                                    <input type="text" autocomplete="off" max="10" min="2" id="input-num" value="3">
+    
+                                <div class="text-center" id="n_clusters">
+                                    <p class="remark" id="splitNum">分色数量</p>
+                                    <div class="btn-numbox">
+                                        <span role="button" id="input-number__decrease">-</span>
+                                        <span role="button" id="input-number__increase">+</span>
+                                        <!--合法性在js中处理-->
+                                        <input type="text" autocomplete="off" max="10" min="2" id="input-num" value="3">
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="text-center" id="splitButton">
-                                <button id="confirm" class="btn btn-lg btn-regular" style="font-size: 1rem;" type="submit" onclick="confirm()">点击这里，开始分色👌</button>
-                            </div>
-                            <!--分色状态提示文字-->
-                            <p id="prompt""></p>
+                                <div class="text-center" id="splitButton">
+                                    <button id="confirm" class="btn btn-lg btn-regular" style="font-size: 1rem;" type="submit" onclick="confirm()">点击这里，开始分色👌</button>
+                                </div>
+                                <!--分色状态提示文字-->
+                                <p id="prompt"></p>
+                        </div>
                     </div>
+                </div><!--上传图片 预览图片-->
+                <div class="d-flex flex-column justify-content-center">
+                    <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M58.0211 79.1667C56.285 79.1667 55.0531 78.4194 54.3253 76.925C53.5947 75.4333 53.7156 73.9931 54.6878 72.6042L70.8336 50L54.6878 27.3958C53.7156 26.0069 53.5947 24.5653 54.3253 23.0708C55.0531 21.5792 56.285 20.8333 58.0211 20.8333C58.785 20.8333 59.4795 21.0236 60.1045 21.4042C60.7295 21.7875 61.2503 22.2569 61.667 22.8125L79.2711 47.6042C79.5489 47.9514 79.7572 48.3333 79.8961 48.75C80.035 49.1667 80.1045 49.5833 80.1045 50C80.1045 50.4167 80.035 50.8153 79.8961 51.1958C79.7572 51.5792 79.5489 51.9792 79.2711 52.3958L61.667 77.1875C61.2503 77.7431 60.7295 78.2125 60.1045 78.5958C59.4795 78.9764 58.785 79.1667 58.0211 79.1667V79.1667ZM33.2295 79.1667C31.4934 79.1667 30.2614 78.4194 29.5336 76.925C28.8031 75.4333 28.9239 73.9931 29.8961 72.6042L46.042 50L29.8961 27.3958C28.9239 26.0069 28.8031 24.5653 29.5336 23.0708C30.2614 21.5792 31.4934 20.8333 33.2295 20.8333C33.9934 20.8333 34.6878 21.0236 35.3128 21.4042C35.9378 21.7875 36.4586 22.2569 36.8753 22.8125L54.4795 47.6042C54.7572 47.9514 54.9656 48.3333 55.1045 48.75C55.2434 49.1667 55.3128 49.5833 55.3128 50C55.3128 50.4167 55.2434 50.8333 55.1045 51.25C54.9656 51.6667 54.7572 52.0486 54.4795 52.3958L36.8753 77.1875C36.4586 77.7431 35.9378 78.2125 35.3128 78.5958C34.6878 78.9764 33.9934 79.1667 33.2295 79.1667V79.1667Z" fill="gray"/>
+                        </svg>
                 </div>
-            </div>
-        </section>
+            
 
-        <!--结果展示-->
-        <section id="result" style="display: None;">
-            <div class="container px-4">
-                <div class="row gx-4 justify-content-center">
-                    <div class="col-lg-8" id="resultShow">
-                        <h2>分色结果</h2>
-                        <!--色板-->
-                        <div class="container" id="paletteArea">
-                            <p class="lead">色板</p>
-                            <div class="container text-center imgContainer1">
-                                <div class="imgContainer2">
-                                    <div class="imgContainer3" id="imgPalette" style="background-image: url();"></div>
+            <!--结果展示-->
+            <div id="result" class="w-100" style="display: block;">
+                <div class="d-flex flex-row gap-2 w-100">
+                    <div class="px-4 bg-light shadow w-100 rounded">
+                        <div class="py-4 px-1 fs-3">2. 分色结果</div>
+                        <div class="d-flex flex-column w-100 gap-3" id="resultShow">
+                            <!--预览-->
+                            <div class="d-flex flex-column w-100">
+                                <div class="fs-5 pb-2 px-2">效果: </div>
+                                <div id="overviewArea">
+                                    <div class="container text-center imgContainer1">
+                                        <div class="imgContainer2">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <!--色板rgb-->
-                        <div class="container">
-                            <p class="lead">色板RGB</p>
-                            <div class="container text-center" id="paletteRGB">
+                            <div class="d-flex flex-column gap-3">
+                                    <!--色板-->
+                                    <div class="d-flex flex-column" id="paletteArea">
+                                        <div class="fs-5 pb-2 px-2">色板:</div>
+                                        <div class="container text-center imgContainer1">
+                                            <div class="imgContainer2">
+                                                <div class="imgContainer3" id="imgPalette" style="background-image: url();"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--色板rgb-->
+                                    <div class="d-flex flex-column">
+                                        <div class="fs-5 pb-2 px-2">色板RGB</div>
+                                        <div class="container text-center imgContainer1" id="paletteRGB">
+                                            
+                                        </div>
+                                    </div>
                             </div>
+                            
                         </div>
+                    </div>
 
-                        <!--预览-->
-                        <div class="container" id="overviewArea">
-                            <p class="lead">图像预览</p>
-                            <div class="container text-center imgContainer1">
-                                <div class="imgContainer2">
-                                    <div class="imgContainer3" id="imgOverview" style="background-image: url();"></div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="d-flex flex-column justify-content-center">
+                        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M58.0211 79.1667C56.285 79.1667 55.0531 78.4194 54.3253 76.925C53.5947 75.4333 53.7156 73.9931 54.6878 72.6042L70.8336 50L54.6878 27.3958C53.7156 26.0069 53.5947 24.5653 54.3253 23.0708C55.0531 21.5792 56.285 20.8333 58.0211 20.8333C58.785 20.8333 59.4795 21.0236 60.1045 21.4042C60.7295 21.7875 61.2503 22.2569 61.667 22.8125L79.2711 47.6042C79.5489 47.9514 79.7572 48.3333 79.8961 48.75C80.035 49.1667 80.1045 49.5833 80.1045 50C80.1045 50.4167 80.035 50.8153 79.8961 51.1958C79.7572 51.5792 79.5489 51.9792 79.2711 52.3958L61.667 77.1875C61.2503 77.7431 60.7295 78.2125 60.1045 78.5958C59.4795 78.9764 58.785 79.1667 58.0211 79.1667V79.1667ZM33.2295 79.1667C31.4934 79.1667 30.2614 78.4194 29.5336 76.925C28.8031 75.4333 28.9239 73.9931 29.8961 72.6042L46.042 50L29.8961 27.3958C28.9239 26.0069 28.8031 24.5653 29.5336 23.0708C30.2614 21.5792 31.4934 20.8333 33.2295 20.8333C33.9934 20.8333 34.6878 21.0236 35.3128 21.4042C35.9378 21.7875 36.4586 22.2569 36.8753 22.8125L54.4795 47.6042C54.7572 47.9514 54.9656 48.3333 55.1045 48.75C55.2434 49.1667 55.3128 49.5833 55.3128 50C55.3128 50.4167 55.2434 50.8333 55.1045 51.25C54.9656 51.6667 54.7572 52.0486 54.4795 52.3958L36.8753 77.1875C36.4586 77.7431 35.9378 78.2125 35.3128 78.5958C34.6878 78.9764 33.9934 79.1667 33.2295 79.1667V79.1667Z" fill="gray"/>
+                            </svg>
+                    </div>
 
+                    <div class="d-flex flex-column px-4 rounded bg-light shadow w-100">
+                        <div class="py-4 px-1 fs-3">3. 橡皮章分层</div>
                         <!--分图层展示-->
-                        <div class="container" id="layersArea">
-                            <p class="lead">各图层预览</p>
-                            <div class="container text-center" id="layers">
+                        <div class="container  w-100" id="layersArea">
+                            <div class="flex flex-column container text-center" id="layers">
+                                
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+        </div>
         
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container px-4"><p class="m-0 text-center text-white">Copyright &copy; Media Computing 2022</p></div>
-        </footer>
-        
+
+
         <!-- Bootstrap core JS-->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
@@ -163,7 +175,7 @@
                 success:function (data) {
                     if(data.signal==1){
                         document.getElementById('prompt').innerHTML='<p id="prompt" style="color: darkgreen">分色成功！</p>';
-                        document.getElementById('result').style.display="block";
+                        // document.getElementById('result').style.display="block";
                         //这里要再写一下刷新后回到页面顶端
                         window.location.hash="#result";
                         document.getElementById('imgPalette').style.backgroundImage="url("+data.palette+")";
@@ -185,13 +197,13 @@
                             //p.innerHTML = '<div class="container text-center imgContainer1"><div class="imgContainer2"><div class="imgContainer3" class="layersOverview" style="background-image: url('+layers[i]+');"></div></div></div>';
                             //document.getElementById("layersArea").append(p);
                             var container = document.createElement('div');
-                            container.className = 'RGBandNote';
+                            container.className = 'RGBandNote d-flex flex-column justify-content-center';
                             var RGBContainer = document.createElement('div');
                             RGBContainer.className = 'RGB';
                             RGBContainer.style.backgroundColor = RGB[i];
                             var note = document.createElement('p');
                             note.innerHTML=RGB[i];
-                            note.className = 'note';
+                            note.className = 'fs-6 note';
                             container.append(RGBContainer);
                             container.append(note);
                             document.getElementById("paletteRGB").append(container);
