@@ -64,7 +64,7 @@
                                             <i class="imageSample" id="sample4" style="background-image: url(../static/assets/sea3.jpeg);"></i>
                                         </div>
                                     </div>
-        
+                                    
                                     <div class="text-center" id="n_clusters">
                                         <p class="remark" id="splitNum">分色数量</p>
                                         <div class="btn-numbox">
@@ -82,9 +82,10 @@
                             
                         </div>
                     </div><!--上传图片 预览图片-->
-
+                    
+                    
                 <!--结果展示-->
-                <div id="result" style="display: none;">
+                <div id="result" style="display: block;">
                         <div class="container d-flex flex-column gap-4 w-100 px-4 bg-light shadow rounded">
                             <div class="py-4 px-1 fs-3">2. 分色结果</div>
                             <div class="d-flex flex-column w-100 gap-3 pb-4" id="resultShow">
@@ -123,14 +124,19 @@
                                 
                             </div>
                         </div>
-
+                        
                         <div class="container d-flex mt-4 flex-column gap-4 px-4 rounded bg-light shadow w-100">
                             <div class="py-4 px-1 fs-3">3. 橡皮章分层</div>
                             <!--分图层展示-->
                             <div class="container  w-100" id="layersArea">
-                                <div class="flex flex-column container text-center" id="layers">
-                                    
+                                <div class="flex flex-column container text-center gap-3" id="layers">
+                                    <!-- <div class="">
+                                        <xy-img gallery src="https://images.pexels.com/photos/841228/pexels-photo-841228.jpeg?auto=compress&cs=tinysrgb&dpr=1&h=650&w=940"></xy-img>
+                                        <xy-img gallery src="https://images.pexels.com/photos/698808/pexels-photo-698808.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"></xy-img>
+                                        <xy-img gallery src="https://images.pexels.com/photos/1440387/pexels-photo-1440387.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"></xy-img>
+                                    </div> -->
                                 </div>
+
                             </div>
                         </div>
                     
@@ -144,6 +150,11 @@
         <script type="text/javascript" src="../static/js/scripts.js"></script>
         
     </body>
+    
+    <script type="module">
+        import '../static/xy-ui/index.js';
+    </script>
+
     <script type="text/javascript">
         function confirm() {
             var formData=new FormData();
@@ -175,7 +186,8 @@
                             //var p = document.createElement('div');
                             //p.innerHTML = '<div class="container text-center imgContainer1"><div class="imgContainer2"><div class="imgContainer3" class="layersOverview" style="background-image: url('+layers[i]+');"></div></div></div>';
                             //document.getElementById("layersArea").append(p);
-                            var g = document.createElement('img');
+                            var g = document.createElement('xy-img');
+                            g.setAttribute("gallery", "A");
                             //id = rgb
                             g.src = layers[i];
                             g.style.width = '100%';
@@ -188,6 +200,7 @@
                             //document.getElementById("layersArea").append(p);
                             var container = document.createElement('div');
                             container.className = 'RGBandNote d-flex flex-column justify-content-center';
+                            
                             var RGBContainer = document.createElement('div');
                             RGBContainer.className = 'RGB';
                             RGBContainer.style.backgroundColor = RGB[i];
