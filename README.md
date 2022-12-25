@@ -10,8 +10,6 @@
 
 - [Pip Package Manager](https://pypi.org/)
 
-## 项目预览
-(ColorSplitApp/assets/web1.png)
 
 ## 项目架构
 ```lua
