@@ -26,7 +26,7 @@ class XyGallery extends HTMLElement {
         }
         :host([open]){
             opacity:1;
-            z-index:10;
+            z-index:1050;
             visibility:visible;
         }
         ::slotted(img){
@@ -283,7 +283,7 @@ export default class XyImg extends HTMLElement {
             position: relative;
             vertical-align: top;
             overflow: hidden;
-            background:#eee;
+            background:#fff;
             font-size:14px;
             color:#666;
         }

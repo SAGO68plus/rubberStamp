@@ -39,7 +39,7 @@ export default class XySwitch extends HTMLElement {
             height:1.2em;
             padding:.125em;
             border-radius:1.2em;
-            background:#eee;
+            background:#fff;
             transition:.3s width,.3s height,.3s background-color;
         }
         label::before{

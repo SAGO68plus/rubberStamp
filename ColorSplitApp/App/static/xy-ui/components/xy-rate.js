@@ -14,7 +14,7 @@ export default class XyRate extends HTMLElement {
             display: inline-flex;
             font-size: 20px;
             direction:rtl;
-            color:#eee;
+            color:#fff;
          }
          label{
             cursor: pointer;
