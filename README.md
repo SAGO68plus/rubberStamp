@@ -31,7 +31,7 @@ ColorSplitApp
 ```
 
 
-## 运行app
+## 运行项目
 ```
 # 1.克隆项目到本地
 $ git clone https://github.com/SAGO68plus/rubberStamp.git
