@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, url_for, jsonify
+from flask import Flask, request, render_template, url_for, jsonify, json
 from main import ImgSplit
 import os
 from werkzeug.utils import secure_filename
@@ -12,6 +12,7 @@ def index():
 
 @app.route('/upload', methods = ['POST'])
 def upload():
+    global image
     f = request.files.get('img')
     n = int(request.form['input'])
     img_path = os.path.join(app.root_path, app.config['UPLOAD_FOLDER'], secure_filename(f.filename))
@@ -23,6 +24,21 @@ def upload():
     layers = image.showLayers()
     RGB = image.paletteRGB()
     return  jsonify({'signal':1, 'palette':palette,'RGB':RGB, 'overview':overview, 'layers':layers})
+
+@app.route('/replace', methods = ['POST'])
+def replace():
+    rgb = request.form['color']
+    index = int(request.form['index'])
+    time = request.form['time']
+    new_layer = image.replaceColor(rgb, index, time)
+    return jsonify({'signal':2, 'path':new_layer})
+
+@app.route('/reset', methods = ['POST'])
+def reset():
+    colors = request.form['colors']
+    time = request.form['time']
+    newImage = image.reset(colors,time)
+    return jsonify({'signal':3, 'newImage':newImage})
     
 if __name__ == '__main__':
-    app.run(port = 5000, host = '0.0.0.0', threaded = True, debug = True)
+    app.run(port = 8000, host = '0.0.0.0', threaded = True, debug = True)

@@ -26,6 +26,10 @@ class ImgSplit:
         self.pallete = None
         #分图层导出，每个图层有一个主题色
         self.layers = []
+        #pred
+        self.pred = None
+        #分色数量
+        self.n_clusters = 3
         
     #功能 函数成员
     #显示原图 应该返回一个base64比较合理
@@ -35,12 +39,14 @@ class ImgSplit:
         plt.imshow(self.pixels)
     
     def colorSplit(self, n_clusters = 3):
+        self.n_clusters = n_clusters
         #处理数据，从三维到二维
         data = self.pixels/255. #像素归一化 变为(0,1)，不然会报错
         data = data.reshape(-1, 3)
         kmeans = MiniBatchKMeans(n_clusters)
         #Index of the cluster each sample belongs to.
         pred = kmeans.fit_predict(data)
+        self.pred = pred
         #聚类得到的几个中心点 3个 是一个3*3的矩阵
         #kmeans.cluster_centers_.shape
         #同属一个cluster的像素替换为类中心点的颜色
@@ -101,3 +107,39 @@ class ImgSplit:
             paths.append('../static/split/'+self.filename+'_layer'+str(i)+'.png')
             i += 1
         return paths
+    
+    def replaceColor(self, color, i, time):
+        #传入一个rgb字符串以及图层的序号
+        #把不等于[0,0,0,0]的替换为传入的color
+        newColor = color[5:-1].split(',')
+        rgba = list(map(int, newColor))
+        rgba = np.asarray(rgba, float)
+        for j in range(3):
+            rgba[j] = rgba[j]/255.
+        temp = np.zeros([self.n_clusters, 4], dtype = float)
+        temp[i] = rgba
+        layerData = temp[self.pred].reshape([self.pixels.shape[0],self.pixels.shape[1],4])
+        plt.figure(figsize = (self.width/1000, self.height/1000), dpi = 1000)
+        plt.axis('off')
+        plt.imshow(layerData)
+        plt.savefig(Basepath+'/static/split/'+self.filename+'_layer_'+time+str(i)+'_new.png', bbox_inches='tight',pad_inches=0.0,transparent=True)
+        return '../static/split/'+self.filename+'_layer_'+time+str(i)+'_new.png'
+    
+    def reset(self, s, time):
+        #传入所有的新颜色，以列表的形式
+        colors = s[:-1].split('),')
+        temp = np.zeros([self.n_clusters, 4], dtype = float)
+        for i in range(len(colors)):
+            newColor = colors[i][5:].split(', ')
+            rgba = list(map(int, newColor))
+            rgba = np.asarray(rgba, float)
+            for j in range(3):
+                rgba[j] = rgba[j]/255.
+            temp[i] = rgba
+        layerData = temp[self.pred].reshape([self.pixels.shape[0],self.pixels.shape[1],4])
+        print(layerData)
+        plt.figure(figsize = (self.width/1000, self.height/1000), dpi = 1000)
+        plt.axis('off')
+        plt.imshow(layerData)
+        plt.savefig(Basepath+'/static/split/'+self.filename+'_reset_'+time+'.png', bbox_inches='tight',pad_inches=0.0,transparent=True)
+        return '../static/split/'+self.filename+'_reset_'+time+'.png'

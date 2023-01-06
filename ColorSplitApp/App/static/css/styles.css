@@ -973,12 +973,12 @@ progress {
   padding-bottom: 0.6rem;
 }
 
-#splitButton{
-  margin-top: 1.5rem;
+
+.confirmButton{
+  margin: 1.5rem 0;
 }
 
 #prompt{
-  margin-top: 1.5rem;
   text-align: center;
   font-weight: 500;
 }

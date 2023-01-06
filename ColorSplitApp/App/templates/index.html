@@ -40,6 +40,9 @@
             </div>
         </header>
 
+        <script type="module" src="../static/xy-ui/components/xy-color-picker.js"></script>
+
+
         <!--上传图片 预览图片-->
         <section class="bg-light" id="upload">
             <div class="container px-4">
@@ -69,7 +72,7 @@
                                     <input type="text" autocomplete="off" max="10" min="2" id="input-num" value="3">
                                 </div>
                             </div>
-                            <div class="text-center" id="splitButton">
+                            <div class="text-center confirmButton" id="splitButton">
                                 <button id="confirm" class="btn btn-lg btn-regular" style="font-size: 1rem;" type="submit" onclick="confirm()">点击这里，开始分色👌</button>
                             </div>
                             <!--分色状态提示文字-->
@@ -113,6 +116,18 @@
                             </div>
                         </div>
 
+                        <div class="text-center confirmButton" id="resetButton">
+                            <button id="reset" class="btn btn-lg btn-regular" style="font-size: 1rem;" type="submit">点击这里，合并图层</button>
+                        </div>
+
+                        <!--合并新图层-->
+                        <div class="container dd" id="resetArea" style="display: None;">
+                            <div class="container text-center imgContainer1">
+                                <div class="flex flex-column container text-center gap-3" id="resetOverview">
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -135,6 +150,7 @@
     </script>
 
     <script type="text/javascript">
+
         function confirm() {
             var formData=new FormData();
             var f=document.getElementById('uploadButton').files[0];
@@ -165,16 +181,26 @@
                         m.style.padding = '2rem';
                         document.getElementById('imgOverview').append(m);
                         var layers = data.layers;
+                        var RGB = data.RGB;
                         for (var i in layers){
+                            var h = document.createElement('xy-color-picker');
+                            h.style.marginBottom = "1rem";
+                            h.setAttribute("defaultvalue", RGB[i]);
+                            h.id = "layer"+i.toString()+'_rgb';
+                            h.className =  "color_picker";
+                            var gArea = document.createElement('div');
                             var g = document.createElement('xy-img');
                             g.setAttribute("gallery", "A");
+                            g.lazy;
+                            g.id = "layer"+i.toString();
                             //id = rgb
                             g.src = layers[i];
                             g.style.width = '100%';
                             g.style.padding = '2rem';
-                            document.getElementById("layers").append(g);
+                            gArea.append(g);
+                            document.getElementById("layers").append(gArea);
+                            document.getElementById("layers").append(h);
                         }
-                        var RGB = data.RGB;
                         for (var i in RGB){
                             var container = document.createElement('div');
                             container.className = 'RGBandNote d-flex flex-column justify-content-center';
@@ -188,10 +214,105 @@
                             container.append(note);
                             document.getElementById("paletteRGB").append(container);
                         }
+
+                        var x = document.getElementsByClassName("color_picker");
+                        var i;
+
+                        /* document.getElementById("layer1_rgb").onchange = function(){
+                            console.info("change");
+                            var replacedLayer = document.createElement('xy-img');
+                            replacedLayer.setAttribute("gallery", "A");
+                            //id = rgb
+                            replacedLayer.src = "../static/split/painting_reset_1672998261507.png";
+                            replacedLayer.style.width = '100%';
+                            replacedLayer.style.padding = '2rem';
+                            var raw = document.getElementById("layer1");
+                            raw.disconnectedCallback();
+                            raw.attributeChangedCallback('src',raw.src, "../static/split/painting_reset_1672998261507.png");
+                            raw.placeholder.classList.remove('show');
+                        } */
+
+                        for (i = 0; i<x.length; i++){
+                            x[i].onchange = function(ev){
+                                var layerName = this.id.substring(0,6);
+                                var index = layerName.substring(5,6);
+                                console.log(this.value);
+                                console.log(this.color);
+                                console.log(ev.target.value);
+                                console.log(ev.detail.value);
+                                console.info("111");
+                                var newcolor = this.color.toRGBA().toString(); //rgba(255,255,255,1);
+                                var formData2=new FormData();
+                                formData2.append('color',newcolor);
+                                formData2.append('index',index);
+                                //每个图层新保存的名字加上时间戳，便于区分及全部保存
+                                formData2.append('time',Date.now());
+                                console.info('success');
+                                $.ajax({
+                                    url:"{{ url_for('replace') }}",
+                                    data:formData2,
+                                    cache:false,
+                                    processData:false,
+                                    contentType:false,
+                                    type:'POST',
+                                    success:function (data) {
+                                        if(data.signal == 2){
+                                            var raw = document.getElementById("layer"+index);
+                                            //参考xy-img.js中方法，src改变要去掉gallery中原来的图像，再更新
+                                            raw.disconnectedCallback();
+                                            raw.attributeChangedCallback('src',raw.src, data.path);
+                                        }
+                                    }
+                                })
+                            }
+                        }
+                        
+
+                        
+
+                        document.getElementById("reset").onclick = function(){
+                            var y = document.getElementsByClassName("color_picker");
+                            var j;
+                            var colors = [];
+                            for (j=0; j<y.length; j++){
+                                console.log(y[j].value);
+                                console.log(y[j].color);
+                                console.info("111");
+                                var newcolor2 = y[j].color.toRGBA().toString();
+                                colors.push(newcolor2);
+                                console.info(colors);
+                            }   
+                            var formData3=new FormData();
+                            formData3.append('colors',colors);
+                            console.info('success');
+                            formData3.append('time',Date.now());
+                            $.ajax({
+                                url:"{{ url_for('reset') }}",
+                                data:formData3,
+                                cache:false,
+                                processData:false,
+                                contentType:false,
+                                type:'POST',
+                                success:function (data) {
+                                    if(data.signal == 3){
+                                        var v = document.createElement('xy-img');
+                                        v.setAttribute("gallery", "A");
+                                        //id = rgb
+                                        v.src = data.newImage;
+                                        v.style.width = '100%';
+                                        v.style.padding = '2rem';
+                                        document.getElementById('resetArea').style.display="block";
+                                        document.getElementById('resetOverview').append(v);
+                                    }
+                                }
+                            })
+                        }
                     }
                 }
             })
         }
+        
+        
         
     </script>
 </html>
