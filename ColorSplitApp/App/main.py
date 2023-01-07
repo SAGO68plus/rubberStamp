@@ -137,7 +137,6 @@ class ImgSplit:
                 rgba[j] = rgba[j]/255.
             temp[i] = rgba
         layerData = temp[self.pred].reshape([self.pixels.shape[0],self.pixels.shape[1],4])
-        print(layerData)
         plt.figure(figsize = (self.width/1000, self.height/1000), dpi = 1000)
         plt.axis('off')
         plt.imshow(layerData)
