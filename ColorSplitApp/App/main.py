@@ -14,7 +14,10 @@ Basepath=os.path.abspath(os.path.dirname(__file__))
 class ImgSplit:
     #构造函数
     def __init__(self, path, filename):
+        #图像名称
         self.filename = filename[filename.rfind('/')+1:filename.rfind('.')]
+        #图像类型 jpg/jpeg/png
+        self.filetype = filename[filename.rfind('.')+1:]
         #像素数据
         self.pixels = np.asarray(Image.open(path))
         #宽度和高度
@@ -26,7 +29,7 @@ class ImgSplit:
         self.pallete = None
         #分图层导出，每个图层有一个主题色
         self.layers = []
-        #pred
+        #pred 分色后数组，存储每个像素点对应颜色索引/集群索引
         self.pred = None
         #分色数量
         self.n_clusters = 3
@@ -38,16 +41,29 @@ class ImgSplit:
         plt.axis('off')
         plt.imshow(self.pixels)
     
-    def colorSplit(self, n_clusters = 3):
-        self.n_clusters = n_clusters
-        #处理数据，从三维到二维
+    def colorSplitForpng(self, n_clusters):
+        data = self.pixels/255. 
+        data = data.reshape(-1, 4)
+        kmeans = MiniBatchKMeans(n_clusters)
+        pred = kmeans.fit_predict(data)
+        self.pred = pred
+        cluster_colors = kmeans.cluster_centers_
+        overview_data = cluster_colors[pred]
+        self.overview = overview_data.reshape(self.pixels.shape)
+        self.palette = cluster_colors.reshape(1,-1,4)
+        for i in range(n_clusters):
+            temp = np.zeros([n_clusters, 4], dtype = float)
+            temp[i] = kmeans.cluster_centers_[i]
+            layer_data = temp[pred].reshape([self.pixels.shape[0],self.pixels.shape[1],4])
+            self.layers.append([temp[i], layer_data])
+    
+    def colorSplitForjpg(self, n_clusters):
         data = self.pixels/255. #像素归一化 变为(0,1)，不然会报错
         data = data.reshape(-1, 3)
         kmeans = MiniBatchKMeans(n_clusters)
         #Index of the cluster each sample belongs to.
         pred = kmeans.fit_predict(data)
         self.pred = pred
-        #聚类得到的几个中心点 3个 是一个3*3的矩阵
         #kmeans.cluster_centers_.shape
         #同属一个cluster的像素替换为类中心点的颜色
         cluster_colors = kmeans.cluster_centers_
@@ -64,18 +80,24 @@ class ImgSplit:
             temp[i] = np.append(kmeans.cluster_centers_[i], [1])
             layer_data = temp[pred].reshape([self.pixels.shape[0],self.pixels.shape[1],4])
             self.layers.append([temp[i], layer_data])
+    
+    def colorSplit(self, n_clusters = 3):
+        self.n_clusters = n_clusters
+        if self.filetype == "png":
+            self.colorSplitForpng(n_clusters)
+        else:
+            self.colorSplitForjpg(n_clusters)
 
     #展示色板
     def showPalette(self):
         plt.figure(figsize = (self.palette.shape[1],1), dpi = 100)
         plt.axis('off')
         plt.imshow(self.palette)
-        plt.savefig(Basepath+'/static/split/'+self.filename+'_palette.jpeg', bbox_inches='tight',pad_inches=0.0,transparent=True)
-        return '../static/split/'+self.filename+'_palette.jpeg'
+        plt.savefig(Basepath+'/static/split/'+self.filename+'_palette.png', bbox_inches='tight',pad_inches=0.0,transparent=True)
+        return '../static/split/'+self.filename+'_palette.png'
 
-    def paletteRGB(self):
-        f = self.palette
-        #将色板由[0-1]再转换为[0-255]区间，深复制
+    def paletteRGBjpg(self):
+        f = self.palette.copy()
         for i in np.nditer(f, op_flags=['readwrite']):
             i[...] = int(255 if i>=1.0 else math.floor(i*256.0))
         f = f.astype(np.int32)
@@ -86,6 +108,25 @@ class ImgSplit:
                 paletteRGB[i][j] = str(paletteRGB[i][j])
             paletteRGB[i] = 'RGB('+', '.join(paletteRGB[i])+')'
         return paletteRGB
+    
+    def paletteRGBpng(self):
+        #结果仍然是rgb，rgba容易引起混淆
+        f = self.palette.copy()
+        for i in np.nditer(f, op_flags=['readwrite']):
+            i[...] = int(255 if i>=1.0 else math.floor(i*256.0))
+        f = f.astype(np.int32)
+        paletteRGB = f.tolist()[0]
+        for i in range(len(paletteRGB)):
+            for j in range(3):
+                paletteRGB[i][j] = str(paletteRGB[i][j])
+            paletteRGB[i] = 'RGB('+', '.join(paletteRGB[i][:-1])+')'
+        return paletteRGB
+    
+    def paletteRGB(self):
+        if self.filetype == "png":
+            return self.paletteRGBpng()
+        else:
+            return self.paletteRGBjpg()
 
     #预览整体图像
     def showOverview(self, dpi = 1000):
